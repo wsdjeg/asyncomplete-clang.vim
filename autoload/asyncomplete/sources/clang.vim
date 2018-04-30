@@ -1,3 +1,6 @@
+let s:JOB = SpaceVim#api#import('job')
+
+
 function! asyncomplete#sources#clang#get_source_options(...) abort
     return extend(extend({
         \     'name': 'clang',
@@ -25,14 +28,14 @@ function! asyncomplete#sources#clang#completor(opts, ctx) abort
 
     let matches = []
 
-    call async#job#start(cmd, {
+    call s:JOB.start(cmd, {
         \     'on_stdout': function('s:handler', [a:opts, a:ctx, start_col, matches]),
         \     'on_exit': function('s:handler', [a:opts, a:ctx, start_col, matches])
         \ })
 endfunction
 
 function! s:handler(opts, ctx, start_col, matches, job_id, data, event) abort
-    if a:event == 'stdout'
+    if a:event ==# 'stdout'
         for line in a:data
             let comp_item = matchstr(line, '^COMPLETION: \zs\S\+')
 
@@ -45,7 +48,7 @@ function! s:handler(opts, ctx, start_col, matches, job_id, data, event) abort
                 \     'dup': 0, 'icase': 1
                 \ })
         endfor
-    elseif a:event == 'exit'
+    elseif a:event ==# 'exit'
         call asyncomplete#complete(a:opts['name'], a:ctx, a:start_col, a:matches)
     endif
 endfunction

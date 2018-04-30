@@ -74,7 +74,7 @@ function! s:collect_clang_args(ctx, config) abort
         call extend(args, clang_args['default'])
     endif
 
-    let clang_complete_file = findfile('.clang_complete', '.;')
+    let clang_complete_file = findfile('.clang', '.;')
     if !empty(clang_complete_file)
         let work_dir = fnamemodify(clang_complete_file, ':p:h')
         call extend(args, ['-working-directory',  work_dir])
